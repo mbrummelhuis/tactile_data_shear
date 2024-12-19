@@ -71,12 +71,12 @@ def main(task='surface_3d'):
     if task=='surface_3d':
         labels = ['pose_z', 'pose_Rx', 'pose_Ry']
         perturb_vars = ['shear_x', 'shear_y', 'shear_Rz']
-    
-    def inspect_label_distribution(labels=labels, perturb_vars=perturb_vars):
+
+    def inspect_label_distribution_training(labels=labels, perturb_vars=perturb_vars):
         """Inspect the distribution of the labels.
         """ 
         fig, axes = plt.subplots(2, 3, figsize=(15, 10), squeeze=False)
-        fig.suptitle('Distribution of labels and shear in training data')
+        fig.suptitle('Distribution of labels and shear in trainig data')
         
         # Plot the label distributions in the first row
         for i, label in enumerate(labels):
@@ -97,20 +97,55 @@ def main(task='surface_3d'):
         # Adjust layout to prevent overlap
         plt.tight_layout(rect=[0, 0, 1, 0.96])  # Leave space for the main title
         plt.show()
+
+    def inspect_label_distribution_validation(labels=labels, perturb_vars=perturb_vars):
+        """Inspect the distribution of the labels.
+        """ 
+        fig, axes = plt.subplots(2, 3, figsize=(15, 10), squeeze=False)
+        fig.suptitle('Distribution of labels and shear in validation data')
+        
+        # Plot the label distributions in the first row
+        for i, label in enumerate(labels):
+            ax = axes[0, i]  # Select the subplot in the first row
+            ax.hist(val_targets[label], bins=30, edgecolor='black')
+            ax.set_title(f'Distribution of {label}')
+            ax.set_xlabel(label)
+            ax.set_ylabel('Count')
+
+        # Plot the perturbing variable distributions in the second row
+        for i, perturb in enumerate(perturb_vars):
+            ax = axes[1, i]  # Select the subplot in the second row
+            ax.hist(val_targets[perturb], bins=30, edgecolor='black')
+            ax.set_title(f'Distribution of {perturb}')
+            ax.set_xlabel(perturb)
+            ax.set_ylabel('Count')
+            
+        # Adjust layout to prevent overlap
+        plt.tight_layout(rect=[0, 0, 1, 0.96])  # Leave space for the main title
+        plt.show()
+        
+    #inspect_label_distribution_training()
+    #inspect_label_distribution_validation()
     
-    target_image = 'image_1.png'
-    
+    target_image = 'image_3201.png'
+    print(f"Analysing image: {target_image}")
+    print(f"Data: {train_targets[train_targets['sensor_image'] == target_image][labels+perturb_vars]}")
+    print("")
     # Find the most similar image based only on labels
     similar_image_labels, distance_labels = find_most_similar_image(
         train_targets, target_image=target_image, label_columns=labels
     )
     print(f"Most similar image based on labels: {similar_image_labels}, Distance: {distance_labels}")
+    print(f"Data: {train_targets[train_targets['sensor_image'] == similar_image_labels][labels+perturb_vars]}")
+    print("")
 
     # Find the most similar image based only on perturbing variables
     similar_image_perturbs, distance_perturbs = find_most_similar_image(
         train_targets, target_image=target_image, perturb_columns=perturb_vars
     )
     print(f"Most similar image based on perturbing variables: {similar_image_perturbs}, Distance: {distance_perturbs}")
+    print(f"Data: {train_targets[train_targets['sensor_image'] == similar_image_perturbs][labels+perturb_vars]}")
+    print("")
 
     # Find the most similar image based on both labels and perturbing variables
     similar_image_both, distance_both = find_most_similar_image(
@@ -118,8 +153,20 @@ def main(task='surface_3d'):
         perturb_columns=perturb_vars
     )
     print(f"Most similar image based on both labels and perturbing variables: {similar_image_both}, Distance: {distance_both}")
-
+    print(f"Data: {train_targets[train_targets['sensor_image'] == similar_image_both][labels+perturb_vars]}")
+    print("")
+    
+    selected_columns = ['sensor_image', 'pose_x', 'pose_y', 'pose_z', 'pose_Rx', 'pose_Ry', 'pose_Rz', 'shear_x', 'shear_y', 'shear_z', 'shear_Rx', 'shear_Ry', 'shear_Rz']
+    topx_data = train_targets.nlargest(5, 'pose_Rx')
+    print("Highest values for pose_Rx")
+    print(topx_data[selected_columns])
+    print("")
         
+    topy_data = train_targets.nlargest(5, 'pose_Ry')
+    print("Highest values for pose_Ry")
+    print(topy_data[selected_columns])
+    print("")
+
 
 if __name__ == '__main__':
     
