@@ -137,7 +137,7 @@ def main(args, shift=1):
         args (arg): arguments of the data collection (replication of the data collection script)
     """
     # set the paths (change here for your data)
-    full_data_path = os.path.join(BASE_DATA_PATH+args.robot+args.sensor, args.task, 'data')
+    full_data_path = os.path.join(BASE_DATA_PATH,args.robot+'_'+args.sensor, args.tasks[0], 'data')
     full_targets_path = os.path.join(full_data_path, 'targets.csv')
 
     target_path = os.path.join(BASE_DATA_PATH, 'ur_tactip', 'surface_3d', 'data', 'targets.csv')
