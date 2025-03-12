@@ -137,10 +137,15 @@ def main(args, shift=1):
         args (arg): arguments of the data collection (replication of the data collection script)
     """
     # set the paths (change here for your data)
-    full_data_path = os.path.join(BASE_DATA_PATH, 'ur_tactip', 'surface_3d-backup', 'data')
+    full_data_path = os.path.join(BASE_DATA_PATH+args.robot+args.sensor, args.task, 'data')
     full_targets_path = os.path.join(full_data_path, 'targets.csv')
 
     target_path = os.path.join(BASE_DATA_PATH, 'ur_tactip', 'surface_3d', 'data', 'targets.csv')
+
+    print(f"Warning: This operation will modify data stored at {full_data_path}")
+    print(f"Labels will be shifted by {shift} and the data will be reprocessed. Backing up original data is advised.")
+    print("Press Enter to continue or Ctrl+C to cancel")
+    input()
 
     # read original labels and shift them
     df = pd.read_csv(full_targets_path)
