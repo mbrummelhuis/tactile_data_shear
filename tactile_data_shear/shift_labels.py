@@ -15,14 +15,14 @@ CIRCLE_MASK_RADIUS = {
     "abb_tactip":   140,
     "cr_tactip":    210,
     "mg400_tactip": None,
-    "ur_tactip":    250,
+    "ur_tactip":    270,
     "sim_tactip":   240
 }
 THRESH = {
     "abb_tactip":   [61, 5],
     "cr_tactip":    [61, 5],
     "mg400_tactip": [61, 5],
-    "ur_tactip":    [33, -39], # Determined using tune_images.py in tactile_image_processing
+    "ur_tactip":    [61, -11], # Determined using tune_images.py in tactile_image_processing
     "sim_tactip":   None
 }
 
@@ -142,7 +142,7 @@ def main(args, shift=1):
 
     target_path = os.path.join(BASE_DATA_PATH, 'ur_tactip', 'surface_3d', 'data', 'targets.csv')
 
-    print(f"Warning: This operation will modify data stored at {full_data_path}")
+    print(f"WARNING: This operation will modify data stored at {full_data_path}")
     print(f"Labels will be shifted by {shift} and the data will be reprocessed. Backing up original data is advised.")
     print("Press Enter to continue or Ctrl+C to cancel")
     input()
@@ -176,4 +176,4 @@ if __name__ == "__main__":
             data_dirs=['data'],
             sample_nums=[4000]
         )
-    main(args, shift = -4)
+    main(args, shift = 0)
